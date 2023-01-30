@@ -65,7 +65,14 @@ fn get_random_char() -> char {
         0 => rng.gen_range('a'..='z'),
         1 => rng.gen_range('A'..='Z'),
         2 => rng.gen_range('0'..='9'),
-        3 => rng.gen_range('!'..='~'),
+        3 => special_chr(&mut rng),
         _ => panic!("Something went wrong!"),
     }
+}
+
+fn special_chr(rng: &mut rand::rngs::ThreadRng) -> char {
+    let special_chars = "*+-&%$@!><?~";
+    let index = rng.gen_range(0..=special_chars.len());
+    let random_char = special_chars.chars().nth(index).unwrap();
+    random_char
 }
