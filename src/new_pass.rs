@@ -13,7 +13,7 @@ pub fn new_password() -> String {
     password
 }
 
-pub fn generate_password(lenght: u8) -> String {
+fn generate_password(lenght: u8) -> String {
     let mut password: String = String::new();
     for _ in 0..lenght {
         password.push(get_random_char());
@@ -21,7 +21,7 @@ pub fn generate_password(lenght: u8) -> String {
     password
 }
 
-pub fn get_random_char() -> char {
+fn get_random_char() -> char {
     let mut rng = rand::thread_rng();
     let random_number: u8 = rng.gen_range(0..=3);
     match random_number {
@@ -33,7 +33,7 @@ pub fn get_random_char() -> char {
     }
 }
 
-pub fn special_chr(rng: &mut rand::rngs::ThreadRng) -> char {
+fn special_chr(rng: &mut rand::rngs::ThreadRng) -> char {
     let special_chars = "*+-&%$@!><?~";
     let index = rng.gen_range(0..special_chars.len());
     let random_char = special_chars.chars().nth(index).unwrap();
