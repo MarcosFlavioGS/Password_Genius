@@ -4,7 +4,7 @@ use rand::Rng;
 fn main() {
     greetings();
     loop { 
-        println!("Press:\n1 - Generate new password.\n2 - See saved passwords");
+        println!("Press:\n1 - Generate new password.\n2 - See saved passwords\n3 - Finish Program");
         let mut input = String::new();
         io::stdin()
             .read_line(&mut input)
@@ -27,6 +27,9 @@ fn main() {
         }
         else if response == 2 {
             panic!("Not yet implemented");
+        }
+        else if response == 3 {
+            std::process::exit(0);
         }
         else {
             panic!("Please typ 1 ot 2");
