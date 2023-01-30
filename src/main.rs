@@ -9,7 +9,7 @@ fn main() {
         io::stdin()
             .read_line(&mut input)
             .expect("Failed to read line");
-        let response: u8 = input.trim().parse().expect("Please type 1 or 2");
+        let response: u8 = input.trim().parse().expect("Please type 1, 2 or 3");
         if response == 1 {
             loop {
                 let _password = new_password();
@@ -75,7 +75,7 @@ fn get_random_char() -> char {
 
 fn special_chr(rng: &mut rand::rngs::ThreadRng) -> char {
     let special_chars = "*+-&%$@!><?~";
-    let index = rng.gen_range(0..=special_chars.len());
+    let index = rng.gen_range(0..special_chars.len());
     let random_char = special_chars.chars().nth(index).unwrap();
     random_char
 }
