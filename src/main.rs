@@ -19,7 +19,9 @@ fn main() {
                 let _password = new_password();
                 println!("1 - Generate new password\n2 - Save password\n3 - Finish program");
                 let mut response = String::new();
-                io::stdin().read_line(&mut response).expect("Failed to read line");
+                io::stdin()
+                    .read_line(&mut response)
+                    .expect("Failed to read line");
                 let response: u8 = response.trim().parse().expect("Please type 1, 2 or 3");
                 match response {
                     1 => continue,
