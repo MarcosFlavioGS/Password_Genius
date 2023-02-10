@@ -13,7 +13,7 @@ pub fn new_password() -> String {
     password
 }
 
-fn generate_password(lenght: u8) -> String {
+fn generate_password(length: u8) -> String {
     let mut password: String = String::new();
     for _ in 0..length {
         password.push(get_random_char());
