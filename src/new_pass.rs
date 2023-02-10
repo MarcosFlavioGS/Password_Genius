@@ -3,19 +3,19 @@ use std::io;
 
 pub fn new_password() -> String {
     let mut input = String::new();
-    println!("Please type the lenght of the password:");
+    println!("Please type the length of the password:");
     io::stdin()
         .read_line(&mut input)
         .expect("Failed to read line");
-    let lenght: u8 = input.trim().parse().expect("Please type a number");
-    let password = generate_password(lenght);
+    let length: u8 = input.trim().parse().expect("Please type a number");
+    let password = generate_password(length);
     println!("your new password is: {}", password);
     password
 }
 
 fn generate_password(lenght: u8) -> String {
     let mut password: String = String::new();
-    for _ in 0..lenght {
+    for _ in 0..length {
         password.push(get_random_char());
     }
     password
