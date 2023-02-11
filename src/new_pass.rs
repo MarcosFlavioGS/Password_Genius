@@ -34,7 +34,7 @@ fn get_random_char() -> char {
 }
 
 fn special_chr(rng: &mut rand::rngs::ThreadRng) -> char {
-    let special_chars = "*+-&%$@!><?~";
+    let special_chars = "*+-_#=&%$@!><?~";
     let index = rng.gen_range(0..special_chars.len());
     let random_char = special_chars.chars().nth(index).unwrap();
     random_char
