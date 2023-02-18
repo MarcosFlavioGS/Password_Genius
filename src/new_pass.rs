@@ -19,7 +19,7 @@ fn generate_password(length: u8) -> String {
         password.push(get_random_char());
     }
     let special = count_special(&password);
-    if special < (length as usize * (20 / 100)) {
+    if special < (length * (20 / 100)) {
         password = generate_password(length);
     }
     password
@@ -44,8 +44,8 @@ fn special_chr(rng: &mut rand::rngs::ThreadRng) -> char {
     random_char
 }
 
-fn count_special(s: &String) -> usize {
-    let mut _counter: usize = 0;
+fn count_special(s: &String) -> u8 {
+    let mut _counter: u8 = 0;
 
     for c in s.chars() {
         if c.is_alphabetic() || c.is_numeric() {
