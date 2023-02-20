@@ -49,9 +49,9 @@ fn count_special(s: &String) -> u8 {
 
     for c in s.chars() {
         if c.is_alphabetic() || c.is_numeric() {
-            _counter += 1;
+            continue;
         } else {
-            continue
+            _counter += 1;
         }
     }
     _counter
