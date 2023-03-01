@@ -1,9 +1,11 @@
 mod new_pass;
 mod greetings;
+mod clipboarding;
 
 use std::io;
 use new_pass::new_password;
 use greetings::greeting;
+use clipboarding::clipboarder;
 
 fn main() {
     greeting();
@@ -19,6 +21,10 @@ fn main() {
         if response == 1 {
             loop {
                 let _password = new_password(); // Pass generated
+                match clipboarder(_password) {
+                    Ok(_) => println!("Password copied to clipboard !"),
+                    Err(_err) => println!("Failed to copy to clipboard..."),
+                }
                 println!("1 - Generate new password\n2 - Save password\n3 - Finish program");
                 let mut response = String::new();
                 io::stdin()
