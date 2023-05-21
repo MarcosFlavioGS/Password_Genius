@@ -23,7 +23,7 @@ fn main() {
                 let _password = new_password(); // Pass generated
                 match clipboarder(_password) {
                     Ok(_) => println!("Password copied to clipboard !"),
-                    Err(_err) => println!("Failed to copy to clipboard..."),
+                    Err(err) => println!("Failed to copy to clipboard...\nError: {}", err),
                 }
                 println!("1 - Generate new password\n2 - Save password\n3 - Finish program");
                 let mut response = String::new();

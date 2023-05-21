@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 rand = "0.8.5"
 clipboard = "0.5.0"
+diesel = {version = "2.0.0", features = ["postgres"]}
