@@ -8,7 +8,7 @@ pub fn new_password() -> String {
         .read_line(&mut input)
         .expect("Failed to read line");
     let length: u8 = input.trim().parse().expect("Please type a number");
-    let password = generate_password(length);// New password
+    let password = generate_password(length);
     println!("your new password is: {}", password);
     password
 }
@@ -16,11 +16,11 @@ pub fn new_password() -> String {
 fn generate_password(length: u8) -> String {
     let mut password: String = String::new();
     for _ in 0..length {
-        password.push(get_random_char());// Pushing characters to password string
+        password.push(get_random_char());
     }
     let special = count_special(&password);// Checking how many special characters are in pass
     if (special as f32) < (0.2 * length as f32) { // Making sure theres at least 20% of special chars in password
-        password = generate_password(length); // Recursion because I'm lazy
+        password = generate_password(length);
     }
     password
 }
@@ -32,13 +32,13 @@ fn get_random_char() -> char {
         0 => rng.gen_range('a'..='z'),
         1 => rng.gen_range('A'..='Z'),
         2 => rng.gen_range('0'..='9'),
-        3 => special_chr(&mut rng), // I'll explain below |
-        _ => panic!("Something went wrong!"),           //v
+        3 => special_chr(&mut rng),
+        _ => panic!("Something went wrong!"),
     }
 }
 
 fn special_chr(rng: &mut rand::rngs::ThreadRng) -> char {
-    let special_chars = "*+-_#=&%$@!><?~";           // Pulling the same way as normal chars was excluding many characters
+    let special_chars = "*+-_#=&%$@!><?~";
     let index = rng.gen_range(0..special_chars.len());
     let random_char = special_chars.chars().nth(index).unwrap();
     random_char
