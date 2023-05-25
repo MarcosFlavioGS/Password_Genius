@@ -45,14 +45,5 @@ fn special_chr(rng: &mut rand::rngs::ThreadRng) -> char {
 }
 
 fn count_special(s: &String) -> u8 {
-    let mut _counter: u8 = 0;
-
-    for c in s.chars() {
-        if c.is_alphabetic() || c.is_numeric() {
-            continue;
-        } else {
-            _counter += 1;
-        }
-    }
-    _counter
+    s.chars().filter(|c| !c.is_alphabetic() && !c.is_numeric()).count() as u8
 }
