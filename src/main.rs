@@ -16,10 +16,17 @@ fn main() {
             match &args[1][..] {
                 "generate" => {
                     let filepath = &args[2][..];
-                    generate(filepath);
+                    let mut base_path = String::from("passwords/");
+                    base_path.push_str(filepath);
+                    base_path.push_str("/pass");
+                    println!("{base_path}");
+                    generate(&base_path);
                 },
                 "insert" => {
                     let filepath = &args[2][..];
+                    let mut base_path = String::from("passwords/");
+                    base_path.push_str(filepath);
+                    base_path.push_str("/pass");
                     insert(filepath);
                 },
                 _ => println!("Do nothing !"),
