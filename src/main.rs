@@ -1,10 +1,11 @@
 mod clipboarding;
 mod new_pass;
 mod insert_pass;
+mod insert;
+mod generate;
 
-use clipboarding::clipboarder;
-use new_pass::new_password;
-use insert_pass::insert_pass;
+use generate::generate;
+use insert::insert;
 use std::env;
 
 fn main() {
@@ -14,20 +15,12 @@ fn main() {
         (2..=3) => {
             match &args[1][..] {
                 "generate" => {
-                    let _passwd = new_password();
-                    match clipboarder(_passwd) {
-                        Ok(_) => println!("Password copied to clipboard !"),
-                        Err(err) => println!(
-                            "Failed to copy to clipboard.\nError: {err}"
-                        ),
-                    }
+                    let filepath = &args[2][..];
+                    generate(filepath);
                 },
                 "insert" => {
                     let filepath = &args[2][..];
-                    match insert_pass(filepath) {
-                        Ok(_) => println!("Iserted at: {filepath}"),
-                        Err(err) => println!("Failed to insert password.\nError: {err}"),
-                    }
+                    insert(filepath);
                 },
                 _ => println!("Do nothing !"),
             }
