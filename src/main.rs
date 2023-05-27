@@ -9,7 +9,7 @@ use generate::generate;
 use insert::insert;
 use getter::getter;
 use std::env;
-use crate::clipboarding::clipboarder;
+use clipboarding::clipboarder;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -35,7 +35,7 @@ fn main() {
                     let source = &args[2][..];
                     let password = getter(source);
                     println!("Password for {source} is: {password}");
-                    match clipboarder(password) {
+                    match clipboarder(&password[..]) {
                         Ok(_) => println!("Copied to clipboard"),
                         Err(err) => println!(
                             "Failed to read line.\nError: {err}"

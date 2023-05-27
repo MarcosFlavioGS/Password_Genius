@@ -1,7 +1,8 @@
-use clipboard::{ClipboardContext,ClipboardProvider};
+use cli_clipboard::{ClipboardContext,ClipboardProvider};
 
-pub fn clipboarder(password: String) -> Result<(), Box<dyn std::error::Error>> {
-    let mut ctx: ClipboardContext = ClipboardProvider::new()?;
-    ctx.set_contents(password.to_string())?;
+pub fn clipboarder(password: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let mut ctx = ClipboardContext::new().unwrap();
+    ctx.set_contents(password.to_owned()).unwrap();
+    assert_eq!(ctx.get_contents().unwrap(), password);
     Ok(())
 }
