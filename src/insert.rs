@@ -8,7 +8,7 @@ pub fn insert(path: &str) {
         .read_line(&mut pass)
         .expect("Failed to read line");
     match insert_pass(path, &pass) {
-        Ok(_) => println!("Iserted at: {path}"),
+        Ok(_) => println!("Inserted at: {path}"),
         Err(err) => println!("Failed to insert password.\nError: {err}"),
     }
 }
