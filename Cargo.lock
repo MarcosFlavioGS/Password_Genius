@@ -127,7 +127,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "passdw_generator"
+name = "passgen"
 version = "0.1.0"
 dependencies = [
  "clipboard",
