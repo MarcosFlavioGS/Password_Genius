@@ -9,6 +9,7 @@ pub fn insert_pass(path: &str, pass: &str) -> Result<(), Box<dyn std::error::Err
         fs::create_dir_all(parent_dir)?;
     }
     let mut file = File::create(full_path).expect("Failed creating file");
-    file.write_all(pass.as_bytes()).expect("Failed to write to file !");
+    file.write_all(pass.as_bytes())
+        .expect("Failed to write to file !");
     Ok(())
 }

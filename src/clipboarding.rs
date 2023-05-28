@@ -1,4 +1,4 @@
-use cli_clipboard::{ClipboardContext,ClipboardProvider};
+use cli_clipboard::{ClipboardContext, ClipboardProvider};
 
 pub fn clipboarder(password: &str) -> Result<(), Box<dyn std::error::Error>> {
     let mut ctx = ClipboardContext::new().unwrap();

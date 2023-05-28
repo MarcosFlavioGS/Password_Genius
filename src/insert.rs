@@ -1,5 +1,5 @@
-use std::io;
 use crate::insert_pass::insert_pass;
+use std::io;
 
 pub fn insert(path: &str) {
     println!("Write your password:\n");
