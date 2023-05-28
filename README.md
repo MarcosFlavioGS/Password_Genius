@@ -34,4 +34,42 @@ The password generator can be used with the following command-line arguments:
 $ ./password-generator [command] [dirname]
 ```
 - [command] can be any of the following:
-- -generate
+   - *Generate*:  Generates a new password and saves it in a file in the specified directory name.
+   - *Insert*: Inserts a password into the specified dir file.
+   - *get*: Retrieves the password from the specified file.
+- [dirname] is the path to the directory where the password will be stored or retrieved.
+
+## Examples
+
+Creates a new directory named *github* that will contain a file with the new password:
+```bash
+$ ./password-generator generate github
+```
+Passgen will then create a new github folder inside a *password* folder in your Home directory.
+
+You could create multiple passwords for the same source passing the entire path:
+```bash
+./passgen generator github/profile1
+```
+Then, to retrieve the password, just type get followed profile1:
+```bash
+./passgen get profile1
+```
+or
+```bash
+./passgen get github/profile1
+```
+
+## File Structure
+The generated passwords are stored in separate files within the passwords directory. Each file represents a specific password source or category.
+
+The file structure will look like:
+```
+passwords/
+├── source1/
+│ └── pass
+├── source2/
+│ └── pass
+└── source3/
+└── pass
+```
