@@ -20,7 +20,7 @@ The password generator provides the following features:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/password-generator.git
+   git clone https://github.com/MarcosFlavioGS/Password_generator.git
    ```
  2. Cd do project directory and run:
   ```bash
@@ -31,7 +31,7 @@ The password generator provides the following features:
 The password generator can be used with the following command-line arguments:
 
 ```bash
-$ ./password-generator [command] [dirname]
+$ ./passgen [command] [dirname]
 ```
 - [command] can be any of the following:
    - *Generate*:  Generates a new password and saves it in a file in the specified directory name.
@@ -43,7 +43,7 @@ $ ./password-generator [command] [dirname]
 
 Creates a new directory named *github* that will contain a file with the new password:
 ```bash
-$ ./password-generator generate github
+$ ./passgen generate github
 ```
 Passgen will then create a new github folder inside a *password* folder in your Home directory.
 
