@@ -1,4 +1,4 @@
-# Password Generator
+# PassGen
 
 This is a password generator written in Rust. It generates secure passwords with a specified length and saves them in separate files for easy retrieval. The generated passwords can also be copied to the clipboard for convenient use.
 
