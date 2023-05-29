@@ -18,14 +18,14 @@ fn main() {
         (2..=3) => match &args[1][..] {
             "generate" => {
                 let filepath = &args[2][..];
-                let mut base_path = String::from("passwords/");
+                let mut base_path = String::from("passgen/");
                 base_path.push_str(filepath);
                 base_path.push_str("/pass");
                 generate(&base_path);
             }
             "insert" => {
                 let filepath = &args[2][..];
-                let mut base_path = String::from("passwords/");
+                let mut base_path = String::from("passgen/");
                 base_path.push_str(filepath);
                 base_path.push_str("/pass");
                 insert(&base_path);
