@@ -18,8 +18,7 @@ fn generate_password(length: u8) -> String {
     for _ in 0..length {
         password.push(get_random_char());
     }
-    let special = count_special(&password);// Checking how many special characters are in pass
-    if (special as f32) < (0.2 * length as f32) { // Making sure theres at least 20% of special chars in password
+    if (count_special(&password) as f32) < (0.2 * length as f32) { // Making sure theres at least 20% of special chars in password
         password = generate_password(length);
     }
     password
