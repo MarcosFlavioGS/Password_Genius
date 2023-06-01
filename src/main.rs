@@ -4,17 +4,27 @@ mod getter;
 mod insert;
 mod insert_pass;
 mod new_pass;
+mod get_path;
+mod get_directories;
 
 use clipboarding::clipboarder;
 use generate::generate;
 use getter::getter;
 use insert::insert;
+use get_path::get_path;
+use get_directories::get_directories;
 use std::env;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     match args.len() {
-        1 => println!("TODO: Show filetree of all created passwords."),
+        1 => {
+            let path = get_path();
+            let directories = get_directories(&path);
+            for directory in directories {
+                println!("{} -", directory);
+            }
+        },
         (2..=3) => match &args[1][..] {
             "generate" => {
                 let mut base_path = String::from("passgen/");
