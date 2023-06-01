@@ -31,16 +31,13 @@ fn get_random_char() -> char {
         0 => rng.gen_range('a'..='z'),
         1 => rng.gen_range('A'..='Z'),
         2 => rng.gen_range('0'..='9'),
-        3 => special_chr(&mut rng),
+        3 => special_chr(&mut rng, "*+-_#=&%$@!><?~"),
         _ => panic!("Something went wrong!"),
     }
 }
 
-fn special_chr(rng: &mut rand::rngs::ThreadRng) -> char {
-    let special_chars = "*+-_#=&%$@!><?~";
-    let index = rng.gen_range(0..special_chars.len());
-    let random_char = special_chars.chars().nth(index).unwrap();
-    random_char
+fn special_chr(rng: &mut rand::rngs::ThreadRng, special_chars: &str) -> char {
+    special_chars.chars().nth(rng.gen_range(0..special_chars.len())).unwrap()
 }
 
 fn count_special(s: &String) -> u8 {
