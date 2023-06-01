@@ -22,7 +22,7 @@ fn main() {
             let path = get_path();
             let directories = get_directories(&path);
             for directory in directories {
-                println!("{} -", directory);
+                println!("{}", directory);
             }
         },
         (2..=3) => match &args[1][..] {
