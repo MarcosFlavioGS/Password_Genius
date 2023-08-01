@@ -340,7 +340,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "passgen"
+name = "password_genius"
 version = "0.1.0"
 dependencies = [
  "cli-clipboard",
