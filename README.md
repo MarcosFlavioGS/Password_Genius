@@ -1,3 +1,5 @@
+![Logo](https://github.com/MarcosFlavioGS/PassGen/assets/95108526/a2399c32-10b7-40ac-be17-9507f744f186)
+
 # PassGen
 
 This is a password generator written in Rust. It generates secure passwords with a specified length and saves them in separate files for easy retrieval. The generated passwords can also be copied to the clipboard for convenient use.
