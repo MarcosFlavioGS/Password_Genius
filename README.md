@@ -1,4 +1,6 @@
-![Logo](https://github.com/MarcosFlavioGS/PassGen/assets/95108526/a2399c32-10b7-40ac-be17-9507f744f186)
+<div align="center">
+  <img width=100% src="https://github.com/MarcosFlavioGS/Password_Genius/assets/95108526/8939958b-8dd5-46e8-8a9c-12e175157604" alt="Capturar">
+</div>
 
 # PassGen
 
