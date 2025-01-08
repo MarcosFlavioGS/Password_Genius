@@ -26,13 +26,18 @@ fn main() {
             }
         },
         (2..=3) => match &args[1][..] {
-            "generate" => {
+            "version" => {
+                let version = env!("CARGO_PKG_VERSION");
+                let name = env!("CARGO_PKG_NAME");
+                println!("{name}\n{version}");
+            },
+            "generate" | "g" => {
                 let mut base_path = String::from("passgen/");
                 base_path.push_str(&args[2][..]);
                 base_path.push_str("/pass");
                 generate(&base_path);
             }
-            "insert" => {
+            "insert" | "i" => {
                 let mut base_path = String::from("passgen/");
                 base_path.push_str(&args[2][..]);
                 base_path.push_str("/pass");
