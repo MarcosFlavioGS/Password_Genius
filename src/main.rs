@@ -50,13 +50,13 @@ fn main() {
                     println!("Password for {source} is: {password}");
                     match clipboarder(&password[..]) {
                         Ok(_) => println!("Copied to clipboard"),
-                        Err(err) => println!("Failed to read line.\nError: {err}"),
+                        Err(err) => eprintln!("Failed to read line.\nError: {err}"),
                     }
                 } else {
                     eprint!("Failed to get password from: {source}");
                 }
             }
-            _ => println!("Command not found..."),
+            _ => eprintln!("Command not found..."),
         },
         _ => panic!("Too many arguments !"),
     }
