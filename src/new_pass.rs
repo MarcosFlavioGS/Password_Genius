@@ -18,7 +18,8 @@ fn generate_password(length: u8) -> String {
     for _ in 0..length {
         password.push(get_random_char());
     }
-    if (count_special(&password) as f32) < (0.2 * length as f32) { // Making sure theres at least 20% of special chars in password
+    if (count_special(&password) as f32) < (0.2 * length as f32) {
+        // Making sure theres at least 20% of special chars in password
         password = generate_password(length);
     }
     password
@@ -37,9 +38,14 @@ fn get_random_char() -> char {
 }
 
 fn special_chr(rng: &mut rand::rngs::ThreadRng, special_chars: &str) -> char {
-    special_chars.chars().nth(rng.gen_range(0..special_chars.len())).unwrap()
+    special_chars
+        .chars()
+        .nth(rng.gen_range(0..special_chars.len()))
+        .unwrap()
 }
 
 fn count_special(s: &String) -> u8 {
-    s.chars().filter(|c| !c.is_alphabetic() && !c.is_numeric()).count() as u8
+    s.chars()
+        .filter(|c| !c.is_alphabetic() && !c.is_numeric())
+        .count() as u8
 }

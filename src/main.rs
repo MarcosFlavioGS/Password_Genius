@@ -1,18 +1,19 @@
 mod clipboarding;
+mod encrypter;
 mod generate;
+mod get_directories;
+mod get_path;
 mod getter;
 mod insert;
 mod insert_pass;
 mod new_pass;
-mod get_path;
-mod get_directories;
 
 use clipboarding::clipboarder;
 use generate::generate;
+use get_directories::get_directories;
+use get_path::get_path;
 use getter::getter;
 use insert::insert;
-use get_path::get_path;
-use get_directories::get_directories;
 use std::env;
 
 fn main() {
@@ -24,13 +25,13 @@ fn main() {
             for directory in directories {
                 println!("{}", directory);
             }
-        },
+        }
         (2..=3) => match &args[1][..] {
             "version" => {
                 let version = env!("CARGO_PKG_VERSION");
                 let name = env!("CARGO_PKG_NAME");
                 println!("{name}\n{version}");
-            },
+            }
             "generate" | "g" => {
                 let mut base_path = String::from("passgen/");
                 base_path.push_str(&args[2][..]);
@@ -45,11 +46,14 @@ fn main() {
             }
             "get" => {
                 let source = &args[2][..];
-                let password = getter(source);
-                println!("Password for {source} is: {password}");
-                match clipboarder(&password[..]) {
-                    Ok(_) => println!("Copied to clipboard"),
-                    Err(err) => println!("Failed to read line.\nError: {err}"),
+                if let Ok(password) = getter(source) {
+                    println!("Password for {source} is: {password}");
+                    match clipboarder(&password[..]) {
+                        Ok(_) => println!("Copied to clipboard"),
+                        Err(err) => println!("Failed to read line.\nError: {err}"),
+                    }
+                } else {
+                    eprint!("Failed to get password from: {source}");
                 }
             }
             _ => println!("Command not found..."),
