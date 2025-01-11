@@ -1,8 +1,8 @@
+use crate::encrypter::encrypt::decrypt;
 use dirs;
-use std::fs;
-use crate::encrypter::encrypt::decrypt; // Import the decrypt function
+use std::fs; // Import the decrypt function
 
-pub fn getter(source: &str,) -> Result<String, Box<dyn std::error::Error>> {
+pub fn getter(source: &str) -> Result<String, Box<dyn std::error::Error>> {
     let home_dir = dirs::home_dir().ok_or("Failed to find home directory")?;
     let file_path = home_dir.join("passgen").join(source).join("pass");
 
@@ -11,12 +11,10 @@ pub fn getter(source: &str,) -> Result<String, Box<dyn std::error::Error>> {
 
     // Use the decrypt function to retrieve the original password
     match decrypt(cipher_text_with_nonce) {
-        Ok(decrypted) => {
-            Ok(decrypted)
-        },
+        Ok(decrypted) => Ok(decrypted),
         Err(err) => {
             eprintln!("Error: {err}");
-            return Err(err)
-        },
+            return Err(err);
+        }
     }
 }

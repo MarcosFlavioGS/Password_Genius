@@ -1,3 +1,3 @@
-pub mod hasher;
-pub mod encrypt;
 pub mod derive;
+pub mod encrypt;
+pub mod hasher;

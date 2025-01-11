@@ -16,6 +16,6 @@ pub fn insert_pass(path: &str, pass: &str) -> Result<(), Box<dyn std::error::Err
     } else {
         eprintln!("Failed to encrypt password !");
     }
-    
+
     Ok(())
 }
