@@ -19,6 +19,16 @@ The password generator provides the following features:
 
 - Rust programming language
 
+## Encryptio
+
+PassGen encrypts your passwords for better safety. But for that it expects that you have a secret key in your system as an environment variable, To set this variable, go to your shell config file(eg. .bashrc, .zshrc...) and to this line:
+
+``` bash
+export PASSGEN_KEY="MySecretKey123"
+```
+
+This was just an example. Put whatever text you want insede the double quotes **" "**
+
 ## Installation
 
 1. Clone the repository:

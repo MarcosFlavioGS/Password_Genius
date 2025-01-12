@@ -2,6 +2,9 @@ use crate::encrypter::encrypt::decrypt;
 use dirs;
 use std::fs;
 
+///
+/// Retrieves a pass from the path, decrypts it and returns the plain text
+/// 
 pub fn getter(source: &str) -> Result<String, Box<dyn std::error::Error>> {
     let home_dir = dirs::home_dir().ok_or("Failed to find home directory")?;
     let file_path = home_dir.join("passgen").join(source).join("pass");

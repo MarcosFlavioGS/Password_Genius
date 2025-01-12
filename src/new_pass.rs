@@ -1,6 +1,9 @@
 use rand::Rng;
 use std::io;
 
+///
+/// Generates a new password based on users preferences.
+///
 pub fn new_password() -> String {
     let mut input = String::new();
     println!("Please type the length of the password:");
@@ -18,8 +21,8 @@ fn generate_password(length: u8) -> String {
     for _ in 0..length {
         password.push(get_random_char());
     }
+    // Making sure theres at least 20% of special chars in password
     if (count_special(&password) as f32) < (0.2 * length as f32) {
-        // Making sure theres at least 20% of special chars in password
         password = generate_password(length);
     }
     password

@@ -5,6 +5,9 @@ use chacha20poly1305::{
 };
 use std::env;
 
+///
+/// Encrypts a given pass using a PASSGEN_KEY and returns a Vec with the data to insert into the file.
+/// 
 pub fn encrypt(pass: &str) -> Result<Vec<u8>, Box<Error>> {
     let passgen_key = env::var("PASSGEN_KEY").expect("Unable to locate environment variable");
     let key = Key::from_slice(&derive(&passgen_key).unwrap()).to_owned();
@@ -19,6 +22,9 @@ pub fn encrypt(pass: &str) -> Result<Vec<u8>, Box<Error>> {
     Ok(result)
 }
 
+///
+/// Decrypts a nonced cipher and returns a plain text, decrypted pass.
+/// 
 pub fn decrypt(cipher_text_with_nonce: Vec<u8>) -> Result<String, Box<dyn std::error::Error>> {
     let passgen_key = env::var("PASSGEN_KEY").expect("Unable to locate environment variable");
     let key = Key::from_slice(&derive(&passgen_key).unwrap()).to_owned();

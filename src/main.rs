@@ -29,8 +29,7 @@ fn main() {
         (2..=3) => match &args[1][..] {
             "version" => {
                 let version = env!("CARGO_PKG_VERSION");
-                let name = env!("CARGO_PKG_NAME");
-                println!("{name}\n{version}");
+                println!("v{version}");
             }
             "generate" | "g" => {
                 let mut base_path = String::from("passgen/");

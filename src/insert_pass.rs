@@ -3,6 +3,9 @@ use dirs;
 use std::fs::{self, File};
 use std::io::prelude::*;
 
+///
+/// Encrypts and inserts a pass to a path
+/// 
 pub fn insert_pass(path: &str, pass: &str) -> Result<(), Box<dyn std::error::Error>> {
     let home_dir = dirs::home_dir().ok_or("Failed to get home directory")?;
     let full_path = home_dir.join(path);

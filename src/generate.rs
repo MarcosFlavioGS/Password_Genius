@@ -2,6 +2,9 @@ use crate::clipboarding::clipboarder;
 use crate::insert_pass::insert_pass;
 use crate::new_pass::new_password;
 
+///
+/// Generates a new pass: String, stores into path: &str and copies to clipboard.
+/// 
 pub fn generate(path: &str) {
     let passwd = new_password();
     match insert_pass(path, &passwd) {
