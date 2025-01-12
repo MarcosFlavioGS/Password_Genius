@@ -2,7 +2,7 @@ use dirs;
 
 ///
 /// Gets the full path of the base dir.
-/// 
+///
 pub fn get_path() -> String {
     let home_dir = dirs::home_dir()
         .ok_or("Failed to get home directory")

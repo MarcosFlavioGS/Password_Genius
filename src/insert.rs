@@ -3,7 +3,7 @@ use std::io;
 
 ///
 /// Gets a pass from the user and inserts it to the path file
-/// 
+///
 pub fn insert(path: &str) {
     println!("Write your password:\n");
     let mut pass = String::new();

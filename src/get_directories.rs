@@ -3,7 +3,7 @@ use std::fs;
 ///
 /// Returns a vector containing all created folders.
 /// Gets all dirs with full paths and returns just the file_name.
-/// 
+///
 pub fn get_directories(path: &str) -> Vec<String> {
     let mut directories = Vec::new();
 
