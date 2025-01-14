@@ -34,23 +34,35 @@ fn main() {
                 println!("v{version}");
             }
             "generate" | "g" => {
-                let base_path: String = get_base_path(&args[2][..], "passgen/");
-                generate(&base_path);
+                if args.len() < 3 {
+                    eprintln!("Arguments must be passed to generate.");
+                } else {
+                    let base_path: String = get_base_path(&args[2][..], "passgen/");
+                    generate(&base_path);
+                }
             }
             "insert" | "i" => {
-                let base_path: String = get_base_path(&args[2][..], "passgen/");
-                insert(&base_path);
+                if args.len() < 3 {
+                    eprintln!("Arguments must be passed to insert.");
+                } else {
+                    let base_path: String = get_base_path(&args[2][..], "passgen/");
+                    insert(&base_path);
+                }
             }
             "get" => {
-                let source = &args[2][..];
-                if let Ok(password) = getter(source) {
-                    println!("Password for {source} is: {password}");
-                    match clipboarder(&password[..]) {
-                        Ok(_) => println!("Copied to clipboard"),
-                        Err(err) => eprintln!("Failed to read line.\nError: {err}"),
-                    }
+                if args.len() < 3 {
+                    eprintln!("Arguments must be passed to get.");
                 } else {
-                    eprint!("Failed to get password from: {source}");
+                    let source = &args[2][..];
+                    if let Ok(password) = getter(source) {
+                        println!("Password for {source} is: {password}");
+                        match clipboarder(&password[..]) {
+                            Ok(_) => println!("Copied to clipboard"),
+                            Err(err) => eprintln!("Failed to read line.\nError: {err}"),
+                        }
+                    } else {
+                        eprint!("Failed to get password from: {source}");
+                    }
                 }
             }
             _ => eprintln!("Command not found..."),
