@@ -7,6 +7,7 @@ mod getter;
 mod insert;
 mod insert_pass;
 mod new_pass;
+mod utils;
 
 use clipboarding::clipboarder;
 use generate::generate;
@@ -15,6 +16,7 @@ use get_path::get_path;
 use getter::getter;
 use insert::insert;
 use std::env;
+use utils::get_path::get_base_path;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -32,15 +34,11 @@ fn main() {
                 println!("v{version}");
             }
             "generate" | "g" => {
-                let mut base_path = String::from("passgen/");
-                base_path.push_str(&args[2][..]);
-                base_path.push_str("/pass");
+                let base_path: String = get_base_path(&args[2][..], "passgen/");
                 generate(&base_path);
             }
             "insert" | "i" => {
-                let mut base_path = String::from("passgen/");
-                base_path.push_str(&args[2][..]);
-                base_path.push_str("/pass");
+                let base_path: String = get_base_path(&args[2][..], "passgen/");
                 insert(&base_path);
             }
             "get" => {
