@@ -68,7 +68,9 @@ fn main() {
                         }
                         match clipboarder(&password[..]) {
                             Ok(_) => println!("Password copied to clipboard !"),
-                            Err(err) => eprintln!("Failed to read line.\nError: {err}"),
+                            Err(err) => {
+                                eprintln!("Failed to copy password to clipboard.\nError: {err}")
+                            }
                         }
                     } else {
                         eprint!("Failed to get password from: {source}");
