@@ -41,15 +41,18 @@ fn main() {
                     eprintln!("Arguments must be passed to generate.");
                 } else {
                     let base_path: String = get_base_path(&args[2][..], "passgen/");
-                    generate(&base_path, config);
+
+                    generate(&base_path, &config);
                 }
             }
             "insert" | "i" => {
+                let config: Config = read_config();
                 if args.len() < 3 {
                     eprintln!("Arguments must be passed to insert.");
                 } else {
                     let base_path: String = get_base_path(&args[2][..], "passgen/");
-                    insert(&base_path);
+
+                    insert(&base_path, &config);
                 }
             }
             "get" => {
@@ -58,7 +61,8 @@ fn main() {
                     eprintln!("Arguments must be passed to get.");
                 } else {
                     let source = &args[2][..];
-                    if let Ok(password) = getter(source) {
+
+                    if let Ok(password) = getter(source, &config) {
                         if config.options.show_pass {
                             println!("Password for {source} is: {password}");
                         }

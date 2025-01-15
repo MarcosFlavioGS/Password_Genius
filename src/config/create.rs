@@ -35,8 +35,15 @@ pub fn create_default_config() -> std::io::Result<()> {
     // options.insert("theme".to_string(), Value::String("dark".to_string())); Ex on String value
     options.insert("show_pass".to_string(), Value::Boolean(show_password));
 
+    let mut encryption = Map::new();
+    encryption.insert(
+        "passgen_key".to_string(),
+        Value::String("randomkey123".to_string()),
+    );
+
     let mut config = Map::new();
     config.insert("options".to_string(), Value::Table(options));
+    config.insert("encryption".to_string(), Value::Table(encryption));
 
     // Serialize the configuration to TOML
     let toml_str =
