@@ -7,22 +7,36 @@ use toml::Value;
 
 use crate::get_path::get_config_path;
 
-///
-/// Create a configuration file into ".config/passgen"
-///
-pub fn create_default_config() -> std::io::Result<()> {
+fn get_input(message: &str) -> String {
     let mut input = String::new();
-    println!("Show password on console ? [Y/n]:");
+    println!("{}", message);
     io::stdin()
         .read_line(&mut input)
         .expect("Failed to read line");
 
+    input
+}
+
+///
+/// Create a configuration file into ".config/passgen"
+///
+pub fn create_default_config() -> std::io::Result<()> {
+    let mut input = get_input("Show password on console ? [Y/n]:");
+
     let show_password: bool;
+    let passgen_key: String;
 
     match input.trim() {
         "Y" | "y" => show_password = true,
         "N" | "n" => show_password = false,
         _ => show_password = false,
+    }
+
+    input = get_input("Chose a secret encryption key (ramdomkey123):");
+
+    match input.trim() {
+        "" => passgen_key = String::from("randomkey123"),
+        key => passgen_key = String::from(key),
     }
 
     // Get standard project directories
@@ -36,10 +50,7 @@ pub fn create_default_config() -> std::io::Result<()> {
     options.insert("show_pass".to_string(), Value::Boolean(show_password));
 
     let mut encryption = Map::new();
-    encryption.insert(
-        "passgen_key".to_string(),
-        Value::String("randomkey123".to_string()),
-    );
+    encryption.insert("passgen_key".to_string(), Value::String(passgen_key));
 
     let mut config = Map::new();
     config.insert("options".to_string(), Value::Table(options));
