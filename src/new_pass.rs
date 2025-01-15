@@ -12,7 +12,6 @@ pub fn new_password() -> String {
         .expect("Failed to read line");
     let length: u8 = input.trim().parse().expect("Please type a number");
     let password = generate_password(length);
-    println!("your new password is: {}", password);
     password
 }
 
