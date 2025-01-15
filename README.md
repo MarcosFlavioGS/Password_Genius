@@ -19,27 +19,31 @@ The password generator provides the following features:
 
 - Rust programming language
 
-## Encryptio
-
-PassGen encrypts your passwords for better safety. But for that it expects that you have a secret key in your system as an environment variable, To set this variable, go to your shell config file(eg. .bashrc, .zshrc...) and to this line:
-
-``` bash
-export PASSGEN_KEY="MySecretKey123"
-```
-
-This was just an example. Put whatever text you want insede the double quotes **" "**
-
 ## Installation
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/MarcosFlavioGS/Password_generator.git
+   git clone https://github.com/MarcosFlavioGS/Password_Genius.git
    ```
- 2. Cd do project directory and run:
+ 2. Cd do project directory and run the **install.sh** scritp:
+
   ```bash
-  cargo build --release
+  ./install.sh
   ```
+
+## Config
+
+Once you have installed or built Passgen, you need to run "passgen config" so it can create the your initial config file. It will be saved at ~/.config/passgen/passgen.toml. This file is created automaticaly so you don't need to worry with it.
+
+### Show pass
+
+You can either request for the passwords to be displayed in the terminal once you generate a new one or get an existing one, or for it to be hidden from the terminal, only being copied to your clipboard.
+
+### Encryption
+
+PassGen encrypts your passwords for better safety. But for that it expects that you have a secret key in your passgen config file. If not key is given, it will default to "ramdomkey123".
+
 ## Usage
 
 The password generator can be used with the following command-line arguments:
@@ -48,10 +52,12 @@ The password generator can be used with the following command-line arguments:
 $ ./passgen [command] [dirname]
 ```
 - [command] can be any of the following:
-   - *Generate*:  Generates a new password and saves it in a file in the specified directory name.
-   - *Insert*: Inserts a password into the specified dir file.
+   - *Generate* | *g*:  Generates a new password and saves it in a file in the specified directory name.
+   - *Insert* | *i*: Inserts a password into the specified dir file.
    - *get*: Retrieves the password from the specified file.
-- [dirname] is the path to the directory where the password will be stored or retrieved.
+   - *config*: Creates the config file for Passgen.
+   - *version*: Displays the current version.
+- [dirname] is the path to the directory where the password will be stored or retrieved. Also, it is the identifier.
 
 ## Examples
 
@@ -63,7 +69,7 @@ Passgen will then create a new github folder inside a *password* folder in your 
 
 You could create multiple passwords for the same source passing the entire path:
 ```bash
-./passgen generator github/profile1
+./passgen generate github/profile1
 ```
 Then, to retrieve the password, just type get followed profile1:
 ```bash
