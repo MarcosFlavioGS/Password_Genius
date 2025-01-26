@@ -21,7 +21,7 @@ fn get_input(message: &str) -> String {
 /// Create a configuration file into ".config/passgen"
 ///
 pub fn create_default_config() -> std::io::Result<()> {
-    let mut input = get_input("Show password on console ? [Y/n]:");
+    let mut input = get_input("Show password on console ? [y/N]:");
 
     let show_password: bool;
     let passgen_key: String;
