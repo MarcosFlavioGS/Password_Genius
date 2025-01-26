@@ -16,4 +16,4 @@ echo "Installing to $INSTALL_PATH"
 sudo cp "$BINARY_PATH" "$INSTALL_PATH"
 sudo chmod +x "$INSTALL_PATH"
 
-echo "Installation complete. Run 'passgen' to start."
+echo "Installation complete. Run 'passgen config' to run configuration."
