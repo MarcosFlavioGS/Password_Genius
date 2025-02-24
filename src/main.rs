@@ -81,6 +81,12 @@ fn main() {
                 Ok(_) => println!("Config file created at ~/.config/passgen/"),
                 Err(err) => eprintln!("Error creating config file: Error: {err}"),
             },
+            "export" => {
+                // TODO: Export /passgen/ files into .zip
+            },
+            "import" => {
+                // TODO: Unzip files into /passgen/ directory
+            }
             _ => eprintln!("Command not found..."),
         },
         _ => panic!("Too many arguments !"),
