@@ -19,13 +19,13 @@ pub enum Commands {
         name: String,
     },
     
-    /// Insert a new password
+    /// Insert a new custom password
     Insert {
         /// The name/identifier for the password
         name: String,
     },
     
-    /// Get a stored password
+    /// Get a stored password by name
     Get {
         /// The name/identifier of the password to retrieve
         name: String,
