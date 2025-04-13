@@ -1,95 +1,137 @@
 <div align="center">
-  <img width=100% src="https://github.com/MarcosFlavioGS/Password_Genius/assets/95108526/8939958b-8dd5-46e8-8a9c-12e175157604" alt="Capturar">
+  <img width=100% src="https://github.com/MarcosFlavioGS/Password_Genius/assets/95108526/8939958b-8dd5-46e8-8a9c-12e175157604" alt="PassGen Logo">
 </div>
 
 # PassGen
 
-This is a password generator written in Rust. It generates secure passwords with a specified length and saves them in separate files for easy retrieval. The generated passwords can also be copied to the clipboard for convenient use.
+A secure and efficient password manager and generator written in Rust. PassGen helps you generate, store, and manage your passwords securely while providing a simple command-line interface.
 
 ## Features
 
-The password generator provides the following features:
-
-- Generate secure passwords with a specified length
-- Save generated passwords in separate files
-- Retrieve passwords from saved files
-- Copy passwords to the clipboard for quick access
+- 🔒 Generate secure, random passwords
+- 📋 Copy passwords to clipboard automatically
+- 🔐 Encrypted password storage
+- 📁 Organized password storage structure
+- ⚙️ Configurable settings
+- 🔄 Import/Export functionality (coming soon)
 
 ## Requirements
 
-- Rust programming language
+- Rust programming language (latest stable version recommended)
+- Linux/Unix-like system (for clipboard support)
 
 ## Installation
 
 1. Clone the repository:
-
    ```bash
    git clone https://github.com/MarcosFlavioGS/Password_Genius.git
    ```
- 2. Cd do project directory and run the **install.sh** scritp:
 
-  ```bash
-  ./install.sh
-  ```
+2. Navigate to the project directory and run the installation script:
+   ```bash
+   cd Password_Genius
+   ./install.sh
+   ```
 
-## Config
+## Configuration
 
-Once you have installed or built Passgen, you need to run "passgen config" so it can create the your initial config file. It will be saved at ~/.config/passgen/passgen.toml. This file is created automaticaly so you don't need to worry with it.
+After installation, you need to create your initial configuration:
 
-### Show pass
+```bash
+passgen config
+```
 
-You can either request for the passwords to be displayed in the terminal once you generate a new one or get an existing one, or for it to be hidden from the terminal, only being copied to your clipboard.
+This will create a configuration file at `~/.config/passgen/passgen.toml` with default settings. You can customize:
 
-### Encryption
+- Password display preferences
+- Encryption settings
+- Default password length
+- And more...
 
-PassGen encrypts your passwords for better safety. But for that it expects that you have a secret key in your passgen config file. If not key is given, it will default to "ramdomkey123".
+### Security Features
+
+- **Encryption**: All passwords are encrypted using a configurable secret key
+- **Clipboard Management**: Passwords are automatically copied to clipboard and cleared after use
+- **Secure Storage**: Passwords are stored in encrypted files with proper permissions
 
 ## Usage
 
-The password generator can be used with the following command-line arguments:
+PassGen provides a simple command-line interface with the following commands:
 
 ```bash
-$ ./passgen [command] [dirname]
+passgen [COMMAND] [OPTIONS]
 ```
-- [command] can be any of the following:
-   - *Generate* | *g*:  Generates a new password and saves it in a file in the specified directory name.
-   - *Insert* | *i*: Inserts a password into the specified dir file.
-   - *get*: Retrieves the password from the specified file.
-   - *config*: Creates the config file for Passgen.
-   - *version*: Displays the current version.
-- [dirname] is the path to the directory where the password will be stored or retrieved. Also, it is the identifier.
 
-## Examples
+### Commands
 
-Creates a new directory named *github* that will contain a file with the new password:
+- `list` - List all stored passwords
+- `generate <name>` - Generate a new password for the specified identifier
+- `insert <name>` - Insert a new password for the specified identifier
+- `get <name>` - Retrieve a stored password
+- `config` - Create or update configuration
+- `export` - Export passwords (coming soon)
+- `import` - Import passwords (coming soon)
+
+### Examples
+
+Generate a new password for GitHub:
 ```bash
-$ ./passgen generate github
-```
-Passgen will then create a new github folder inside a *password* folder in your Home directory.
-
-You could create multiple passwords for the same source passing the entire path:
-```bash
-./passgen generate github/profile1
-```
-Then, to retrieve the password, just type get followed profile1:
-```bash
-./passgen get profile1
-```
-or
-```bash
-./passgen get github/profile1
+passgen generate github
 ```
 
-## File Structure
-The generated passwords are stored in separate files within the passwords directory. Each file represents a specific password source or category.
+Insert a custom password:
+```bash
+passgen insert github
+```
 
-The file structure will look like:
+Retrieve a stored password:
+```bash
+passgen get github
 ```
-passwords/
-├── source1/
-│ └── pass
-├── source2/
-│ └── pass
-└── source3/
-└── pass
+
+List all stored passwords:
+```bash
+passgen list
 ```
+
+## Project Structure
+
+The codebase is organized into logical modules:
+
+```
+src/
+├── main.rs
+├── cli.rs
+├── password/      # Password management
+├── config/        # Configuration handling
+├── path/          # Path utilities
+├── clipboard/     # Clipboard operations
+├── generator/     # Password generation
+├── directories/   # Directory management
+├── utils/         # Utility functions
+└── encrypter/     # Encryption functionality
+```
+
+## Password Storage
+
+Passwords are stored in an organized directory structure:
+
+```
+~/.local/share/passgen/
+├── github/
+│   └── pass
+├── twitter/
+│   └── pass
+└── work/
+    └── pass
+```
+
+Each password is stored in its own encrypted file, making it easy to manage and retrieve.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
