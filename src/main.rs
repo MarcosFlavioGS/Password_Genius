@@ -10,6 +10,7 @@ mod insert_pass;
 mod new_pass;
 mod utils;
 
+use clap::{Parser, Subcommand};
 use clipboarding::clipboarder;
 use config::{create::create_default_config, read::read_config, Config};
 use generate::generate;
@@ -17,78 +18,95 @@ use get_directories::get_directories;
 use get_path::get_path;
 use getter::getter;
 use insert::insert;
-use std::env;
 use utils::get_path::get_base_path;
 
+/// A secure password manager and generator
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
+struct Cli {
+    #[command(subcommand)]
+    command: Commands,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// List all stored passwords
+    List,
+    
+    /// Generate a new password
+    Generate {
+        /// The name/identifier for the password
+        name: String,
+    },
+    
+    /// Insert a new password
+    Insert {
+        /// The name/identifier for the password
+        name: String,
+    },
+    
+    /// Get a stored password
+    Get {
+        /// The name/identifier of the password to retrieve
+        name: String,
+    },
+    
+    /// Create a new configuration file
+    Config,
+    
+    /// Export passwords (TODO)
+    Export,
+    
+    /// Import passwords (TODO)
+    Import,
+}
+
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    match args.len() {
-        1 => {
+    let cli = Cli::parse();
+
+    match cli.command {
+        Commands::List => {
             let path = get_path();
             let directories = get_directories(&path);
             for directory in directories {
                 println!("{}", directory);
             }
         }
-        (2..=3) => match &args[1][..] {
-            "version" => {
-                let version = env!("CARGO_PKG_VERSION");
-                println!("v{version}");
-            }
-            "generate" | "g" => {
-                let config: Config = read_config();
-                if args.len() < 3 {
-                    eprintln!("Arguments must be passed to generate.");
-                } else {
-                    let base_path: String = get_base_path(&args[2][..], "passgen/");
-
-                    generate(&base_path, &config);
+        Commands::Generate { name } => {
+            let config: Config = read_config();
+            let base_path: String = get_base_path(&name, "passgen/");
+            generate(&base_path, &config);
+        }
+        Commands::Insert { name } => {
+            let config: Config = read_config();
+            let base_path: String = get_base_path(&name, "passgen/");
+            insert(&base_path, &config);
+        }
+        Commands::Get { name } => {
+            let config: Config = read_config();
+            if let Ok(password) = getter(&name, &config) {
+                if config.options.show_pass {
+                    println!("Password for {name} is: {password}");
                 }
-            }
-            "insert" | "i" => {
-                let config: Config = read_config();
-                if args.len() < 3 {
-                    eprintln!("Arguments must be passed to insert.");
-                } else {
-                    let base_path: String = get_base_path(&args[2][..], "passgen/");
-
-                    insert(&base_path, &config);
-                }
-            }
-            "get" => {
-                let config: Config = read_config();
-                if args.len() < 3 {
-                    eprintln!("Arguments must be passed to get.");
-                } else {
-                    let source = &args[2][..];
-
-                    if let Ok(password) = getter(source, &config) {
-                        if config.options.show_pass {
-                            println!("Password for {source} is: {password}");
-                        }
-                        match clipboarder(&password[..]) {
-                            Ok(_) => println!("Password copied to clipboard !"),
-                            Err(err) => {
-                                eprintln!("Failed to copy password to clipboard.\nError: {err}")
-                            }
-                        }
-                    } else {
-                        eprint!("Failed to get password from: {source}");
+                match clipboarder(&password[..]) {
+                    Ok(_) => println!("Password copied to clipboard !"),
+                    Err(err) => {
+                        eprintln!("Failed to copy password to clipboard.\nError: {err}")
                     }
                 }
+            } else {
+                eprint!("Failed to get password from: {name}");
             }
-            "config" => match create_default_config() {
-                Ok(_) => println!("Config file created at ~/.config/passgen/"),
-                Err(err) => eprintln!("Error creating config file: Error: {err}"),
-            },
-            "export" => {
-                // TODO: Export /passgen/ files into .zip
-            },
-            "import" => {
-                // TODO: Unzip files into /passgen/ directory
-            }
-            _ => eprintln!("Command not found..."),
+        }
+        Commands::Config => match create_default_config() {
+            Ok(_) => println!("Config file created at ~/.config/passgen/"),
+            Err(err) => eprintln!("Error creating config file: Error: {err}"),
         },
-        _ => panic!("Too many arguments !"),
+        Commands::Export => {
+            println!("Export functionality coming soon!");
+        },
+        Commands::Import => {
+            println!("Import functionality coming soon!");
+        }
     }
 }
