@@ -1,65 +1,22 @@
-mod clipboarding;
+mod clipboard;
+mod cli;
 mod config;
+mod directories;
 mod encrypter;
-mod generate;
-mod get_directories;
-mod get_path;
-mod getter;
-mod insert;
-mod insert_pass;
-mod new_pass;
+mod generator;
+mod path;
+mod password;
 mod utils;
 
-use clap::{Parser, Subcommand};
-use clipboarding::clipboarder;
+use clap::Parser;
+use clipboard::clipboarder;
+use cli::{Cli, Commands};
 use config::{create::create_default_config, read::read_config, Config};
-use generate::generate;
-use get_directories::get_directories;
-use get_path::get_path;
-use getter::getter;
-use insert::insert;
+use directories::get_directories;
+use generator::generate;
+use path::get_path;
+use password::{getter::getter, insert::insert};
 use utils::get_path::get_base_path;
-
-/// A secure password manager and generator
-#[derive(Parser)]
-#[command(author, version, about, long_about = None)]
-struct Cli {
-    #[command(subcommand)]
-    command: Commands,
-}
-
-#[derive(Subcommand)]
-enum Commands {
-    /// List all stored passwords
-    List,
-    
-    /// Generate a new password
-    Generate {
-        /// The name/identifier for the password
-        name: String,
-    },
-    
-    /// Insert a new password
-    Insert {
-        /// The name/identifier for the password
-        name: String,
-    },
-    
-    /// Get a stored password
-    Get {
-        /// The name/identifier of the password to retrieve
-        name: String,
-    },
-    
-    /// Create a new configuration file
-    Config,
-    
-    /// Export passwords (TODO)
-    Export,
-    
-    /// Import passwords (TODO)
-    Import,
-}
 
 fn main() {
     let cli = Cli::parse();

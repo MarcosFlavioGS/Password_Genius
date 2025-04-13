@@ -1,7 +1,6 @@
-use crate::clipboarding::clipboarder;
+use crate::clipboard::clipboarder;
 use crate::config::Config;
-use crate::insert_pass::insert_pass;
-use crate::new_pass::new_password;
+use crate::password::{insert_pass::insert_pass, new_pass::new_password};
 
 ///
 /// Generates a new pass: String, stores into path: &str and copies to clipboard.

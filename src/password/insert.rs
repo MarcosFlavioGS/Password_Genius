@@ -1,4 +1,4 @@
-use crate::{config::Config, insert_pass::insert_pass};
+use crate::{config::Config, password::insert_pass::insert_pass};
 use std::io;
 
 ///
