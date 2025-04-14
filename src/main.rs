@@ -9,12 +9,12 @@ mod password;
 mod utils;
 
 use clap::Parser;
-use clipboard::clipboarder;
+use clipboard::clipboarder::clipboarder;
 use cli::{Cli, Commands};
 use config::{create::create_default_config, read::read_config, Config};
-use directories::get_directories;
-use generator::generate;
-use path::get_path;
+use directories::get::get_directories;
+use generator::gen::generate;
+use path::config::get_path;
 use password::{getter::getter, insert::insert};
 use utils::get_path::get_base_path;
 
