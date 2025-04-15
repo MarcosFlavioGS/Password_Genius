@@ -4,6 +4,7 @@ mod config;
 mod directories;
 mod encrypter;
 mod generator;
+mod inserter;
 mod password;
 mod path;
 mod utils;
@@ -14,7 +15,8 @@ use clipboard::clipboarder::clipboarder;
 use config::{create::create_default_config, read::read_config, Config};
 use directories::get::get_directories;
 use generator::gen::generate;
-use password::{getter::getter, insert::insert};
+use inserter::insert::insert;
+use password::getter::getter;
 use path::config::get_path;
 use utils::get_path::get_base_path;
 
