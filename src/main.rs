@@ -1,21 +1,21 @@
-mod clipboard;
 mod cli;
+mod clipboard;
 mod config;
 mod directories;
 mod encrypter;
 mod generator;
-mod path;
 mod password;
+mod path;
 mod utils;
 
 use clap::Parser;
-use clipboard::clipboarder::clipboarder;
 use cli::{Cli, Commands};
+use clipboard::clipboarder::clipboarder;
 use config::{create::create_default_config, read::read_config, Config};
 use directories::get::get_directories;
 use generator::gen::generate;
-use path::config::get_path;
 use password::{getter::getter, insert::insert};
+use path::config::get_path;
 use utils::get_path::get_base_path;
 
 fn main() {
@@ -41,18 +41,21 @@ fn main() {
         }
         Commands::Get { name } => {
             let config: Config = read_config();
-            if let Ok(password) = getter(&name, &config) {
-                if config.options.show_pass {
-                    println!("Password for {name} is: {password}");
-                }
-                match clipboarder(&password[..]) {
-                    Ok(_) => println!("Password copied to clipboard !"),
-                    Err(err) => {
-                        eprintln!("Failed to copy password to clipboard.\nError: {err}")
+            match getter(&name, &config) {
+                Ok(password) => {
+                    if config.options.show_pass {
+                        println!("Password for {name} is: {password}");
+                    }
+                    match clipboarder(&password[..]) {
+                        Ok(_) => println!("Password copied to clipboard !"),
+                        Err(err) => {
+                            eprintln!("Failed to copy password to clipboard.\nError: {err}")
+                        }
                     }
                 }
-            } else {
-                eprint!("Failed to get password from: {name}");
+                Err(err) => {
+                    eprint!("Failed to get password from: {name}; Error: {err}");
+                }
             }
         }
         Commands::Config => match create_default_config() {
@@ -61,7 +64,7 @@ fn main() {
         },
         Commands::Export => {
             println!("Export functionality coming soon!");
-        },
+        }
         Commands::Import => {
             println!("Import functionality coming soon!");
         }

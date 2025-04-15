@@ -1,10 +1,10 @@
+use crate::path::config::get_config_path;
 use std::fs::{self, File};
 use std::io;
 use std::io::Write;
 use std::path::PathBuf;
 use toml::map::Map;
 use toml::Value;
-use crate::path::config::get_config_path;
 
 fn get_input(message: &str) -> String {
     let mut input = String::new();

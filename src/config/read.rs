@@ -1,6 +1,6 @@
+use crate::path::config::get_config_path_str;
 use std::fs;
 use toml;
-use crate::path::config::get_config_path_str;
 
 use super::Config;
 

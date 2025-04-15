@@ -10,13 +10,15 @@ pub fn getter(source: &str, config: &Config) -> Result<String, Box<dyn std::erro
     let file_path = home_dir.join("passgen").join(source).join("pass");
 
     // Read the binary content of the file
-    let cipher_text_with_nonce = fs::read(file_path).expect("Failed to read from file");
-
-    match decrypt(cipher_text_with_nonce, config) {
-        Ok(decrypted) => Ok(decrypted),
-        Err(err) => {
-            eprintln!("Error: {err}");
-            return Err(err);
+    if let Ok(cipher_text_with_nonce) = fs::read(file_path) {
+        match decrypt(cipher_text_with_nonce, config) {
+            Ok(decrypted) => Ok(decrypted),
+            Err(err) => {
+                eprintln!("Error: {err}");
+                return Err(err);
+            }
         }
+    } else {
+        return Err("Failed to read from file. Possibly not found.".into());
     }
 }

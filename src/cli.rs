@@ -12,31 +12,31 @@ pub struct Cli {
 pub enum Commands {
     /// List all stored passwords
     List,
-    
+
     /// Generate a new password
     Generate {
         /// The name/identifier for the password
         name: String,
     },
-    
+
     /// Insert a new custom password
     Insert {
         /// The name/identifier for the password
         name: String,
     },
-    
+
     /// Get a stored password by name
     Get {
         /// The name/identifier of the password to retrieve
         name: String,
     },
-    
+
     /// Create a new configuration file
     Config,
-    
+
     /// Export passwords (TODO)
     Export,
-    
+
     /// Import passwords (TODO)
     Import,
-} 
+}
