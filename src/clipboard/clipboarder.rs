@@ -6,7 +6,9 @@ fn is_wayland() -> bool {
     env::var("WAYLAND_DISPLAY").is_ok() || env::var("XDG_SESSION_TYPE").map(|v| v == "wayland").unwrap_or(false)
 }
 
+///
 /// Copies a password to the clipboard, supporting both X11 and Wayland environments
+///
 pub fn clipboarder(password: &str) -> Result<(), Box<dyn std::error::Error>> {
     let password = password.trim_end();
 
