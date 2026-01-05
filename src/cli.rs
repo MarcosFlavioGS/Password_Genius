@@ -39,4 +39,10 @@ pub enum Commands {
 
     /// Import passwords (TODO)
     Import,
+
+    /// Removes a password
+    Delete {
+        ///the name/identifier for the password to be deleted
+        name: String,
+    },
 }

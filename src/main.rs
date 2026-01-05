@@ -5,6 +5,7 @@ mod directories;
 mod encrypter;
 mod generator;
 mod inserter;
+mod deleter;
 mod password;
 mod path;
 mod utils;
@@ -16,6 +17,7 @@ use config::{create::create_default_config, read::read_config, Config};
 use directories::get::get_directories;
 use generator::gen::generate;
 use inserter::insert::insert;
+use deleter::delete::delete;
 use password::getter::getter;
 use path::config::get_path;
 use utils::get_path::get_base_path;
@@ -63,7 +65,12 @@ fn main() {
         Commands::Config => match create_default_config() {
             Ok(_) => println!("Config file created at ~/.config/passgen/"),
             Err(err) => eprintln!("Error creating config file: Error: {err}"),
-        },
+        }
+        Commands::Delete { name } => {
+            let base_path: String = get_base_path(&name, "passgen/");
+            delete(&base_path);
+
+        }
         Commands::Export => {
             println!("Export functionality coming soon!");
         }
