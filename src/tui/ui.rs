@@ -154,16 +154,32 @@ fn draw_get(frame: &mut Frame<'_>, app: &App, area: Rect) {
         return;
     };
 
+    let show_pass = app.config.as_ref().is_some_and(|c| c.options.show_pass);
+
     let body = match (plain, err) {
         (Some(p), _) => {
-            vec![
-                Line::from(vec![
-                    Span::raw("Entry: "),
-                    Span::styled(name, Style::default().bold()),
-                ]),
-                Line::from(""),
-                Line::from(Span::styled(p, Style::default().fg(Color::Green))),
-            ]
+            if show_pass {
+                vec![
+                    Line::from(vec![
+                        Span::raw("Entry: "),
+                        Span::styled(name, Style::default().bold()),
+                    ]),
+                    Line::from(""),
+                    Line::from(Span::styled(p, Style::default().fg(Color::Green))),
+                ]
+            } else {
+                vec![
+                    Line::from(vec![
+                        Span::raw("Entry: "),
+                        Span::styled(name, Style::default().bold()),
+                    ]),
+                    Line::from(""),
+                    Line::from(vec![
+                        Span::styled("••••••••••••••", Style::default().fg(Color::DarkGray)),
+                        Span::raw("  (hidden — turn on “show password” in Settings to reveal)"),
+                    ]),
+                ]
+            }
         }
         (None, Some(e)) => vec![
             Line::from(vec![
@@ -179,8 +195,14 @@ fn draw_get(frame: &mut Frame<'_>, app: &App, area: Rect) {
         (None, None) => vec![Line::from("Unknown state.")],
     };
 
+    let hint = if show_pass {
+        "Get — c copy to clipboard  Esc back"
+    } else {
+        "Get — c copy to clipboard  Esc back  (password not shown on screen)"
+    };
+
     let mut lines = vec![Line::from(vec![Span::styled(
-        "Get — c copy to clipboard  Esc back",
+        hint,
         Style::default().fg(Color::Cyan),
     )])];
     lines.push(Line::from(""));

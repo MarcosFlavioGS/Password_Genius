@@ -1,9 +1,12 @@
 use clipboard::{ClipboardContext, ClipboardProvider};
-use std::process::Command;
 use std::env;
+use std::process::Command;
 
 fn is_wayland() -> bool {
-    env::var("WAYLAND_DISPLAY").is_ok() || env::var("XDG_SESSION_TYPE").map(|v| v == "wayland").unwrap_or(false)
+    env::var("WAYLAND_DISPLAY").is_ok()
+        || env::var("XDG_SESSION_TYPE")
+            .map(|v| v == "wayland")
+            .unwrap_or(false)
 }
 
 ///
@@ -16,7 +19,8 @@ pub fn clipboarder(password: &str) -> Result<(), Box<dyn std::error::Error>> {
         // Use wl-copy for Wayland
         let status = Command::new("wl-copy")
             .arg("--trim-newline")
-            .arg("--type").arg("text/plain")
+            .arg("--type")
+            .arg("text/plain")
             .arg(password)
             .status()?;
 
@@ -25,9 +29,7 @@ pub fn clipboarder(password: &str) -> Result<(), Box<dyn std::error::Error>> {
         }
 
         // Verify (requires wl-paste)
-        let output = Command::new("wl-paste")
-            .arg("--no-newline")
-            .output()?;
+        let output = Command::new("wl-paste").arg("--no-newline").output()?;
 
         let clipboard_content = String::from_utf8(output.stdout)?;
         if clipboard_content != password {
