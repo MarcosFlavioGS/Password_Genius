@@ -1,11 +1,18 @@
 use clap::{Parser, Subcommand};
 
-/// A secure password manager and generator
+/// A secure password manager and generator.
+///
+/// Without `-t`/`--tui`, pass a subcommand (or run with no arguments to print help).
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
+    /// Run the full-screen terminal UI (Ratatui) instead of a one-shot subcommand.
+    #[arg(short = 't', long = "tui")]
+    pub tui: bool,
+
+    /// Subcommand to run (omit when using `--tui`).
     #[command(subcommand)]
-    pub command: Commands,
+    pub command: Option<Commands>,
 }
 
 #[derive(Subcommand)]

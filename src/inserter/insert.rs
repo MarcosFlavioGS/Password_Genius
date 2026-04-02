@@ -10,8 +10,18 @@ pub fn insert(path: &str, config: &Config) {
     io::stdin()
         .read_line(&mut pass)
         .expect("Failed to read line");
-    match insert_pass(path, &pass, config) {
+    match insert_password(path, config, &pass) {
         Ok(_) => println!("Inserted at: {path}"),
         Err(err) => println!("Failed to insert password.\nError: {err}"),
     }
+}
+
+/// Inserts a password from a string (line endings trimmed). Used by the TUI.
+pub fn insert_password(
+    path: &str,
+    config: &Config,
+    password: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let trimmed = password.trim_end_matches(['\r', '\n']);
+    insert_pass(path, trimmed, config)
 }

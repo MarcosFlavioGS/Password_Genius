@@ -20,3 +20,14 @@ pub fn generate(path: &str, config: &Config) {
         Err(err) => eprintln!("Failed to read line.\nError: {err}"),
     }
 }
+
+/// Generates a password of `length`, stores it at `path`, copies it to the clipboard, and returns
+/// the plaintext (for callers that need to display it without writing to stdout).
+pub fn generate_stored(path: &str, config: &Config, length: u8) -> Result<String, String> {
+    use crate::password::new_pass::generate_password_at_length;
+
+    let passwd = generate_password_at_length(length);
+    insert_pass(path, &passwd, config).map_err(|e| format!("Failed to insert password: {e}"))?;
+    clipboarder(&passwd[..]).map_err(|e| format!("Failed to copy to clipboard: {e}"))?;
+    Ok(passwd)
+}
