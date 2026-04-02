@@ -11,8 +11,12 @@ pub fn new_password() -> String {
         .read_line(&mut input)
         .expect("Failed to read line");
     let length: u8 = input.trim().parse().expect("Please type a number");
-    let password = generate_password(length);
-    password
+    generate_password_at_length(length)
+}
+
+/// Generates a password of the given length with the same rules as the interactive CLI.
+pub fn generate_password_at_length(length: u8) -> String {
+    generate_password(length)
 }
 
 fn generate_password(length: u8) -> String {

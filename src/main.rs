@@ -1,23 +1,25 @@
 mod cli;
 mod clipboard;
 mod config;
+mod deleter;
 mod directories;
 mod encrypter;
 mod generator;
 mod inserter;
-mod deleter;
 mod password;
 mod path;
+mod tui;
 mod utils;
 
+use clap::CommandFactory;
 use clap::Parser;
 use cli::{Cli, Commands};
 use clipboard::clipboarder::clipboarder;
 use config::{create::create_default_config, read::read_config, Config};
+use deleter::delete::delete;
 use directories::get::get_directories;
 use generator::gen::generate;
 use inserter::insert::insert;
-use deleter::delete::delete;
 use password::getter::getter;
 use path::config::get_path;
 use utils::get_path::get_base_path;
@@ -25,25 +27,33 @@ use utils::get_path::get_base_path;
 fn main() {
     let cli = Cli::parse();
 
+    if cli.tui {
+        if let Err(e) = tui::run() {
+            eprintln!("TUI error: {e}");
+            std::process::exit(1);
+        }
+        return;
+    }
+
     match cli.command {
-        Commands::List => {
+        Some(Commands::List) => {
             let path = get_path();
             let directories = get_directories(&path);
             for directory in directories {
                 println!("{}", directory);
             }
         }
-        Commands::Generate { name } => {
+        Some(Commands::Generate { name }) => {
             let config: Config = read_config();
             let base_path: String = get_base_path(&name, "passgen/");
             generate(&base_path, &config);
         }
-        Commands::Insert { name } => {
+        Some(Commands::Insert { name }) => {
             let config: Config = read_config();
             let base_path: String = get_base_path(&name, "passgen/");
             insert(&base_path, &config);
         }
-        Commands::Get { name } => {
+        Some(Commands::Get { name }) => {
             let config: Config = read_config();
             match getter(&name, &config) {
                 Ok(password) => {
@@ -62,20 +72,24 @@ fn main() {
                 }
             }
         }
-        Commands::Config => match create_default_config() {
+        Some(Commands::Config) => match create_default_config() {
             Ok(_) => println!("Config file created at ~/.config/passgen/"),
             Err(err) => eprintln!("Error creating config file: Error: {err}"),
-        }
-        Commands::Delete { name } => {
+        },
+        Some(Commands::Delete { name }) => {
             let base_path: String = get_base_path(&name, "passgen/");
             delete(&base_path);
-
         }
-        Commands::Export => {
+        Some(Commands::Export) => {
             println!("Export functionality coming soon!");
         }
-        Commands::Import => {
+        Some(Commands::Import) => {
             println!("Import functionality coming soon!");
+        }
+        None => {
+            let mut cmd = Cli::command();
+            let _ = cmd.print_help();
+            println!();
         }
     }
 }

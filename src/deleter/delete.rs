@@ -12,8 +12,12 @@ pub fn delete(path: &str) {
 }
 
 fn delete_pass(path: &str) -> Result<(), Box<dyn std::error::Error>> {
-	let home_dir = dirs::home_dir().ok_or("Failed to get home directory")?;
+    let home_dir = dirs::home_dir().ok_or("Failed to get home directory")?;
     let full_path = home_dir.join(path);
-    fs::remove_file(full_path)?;
-	Ok(())
+    fs::remove_file(&full_path)?;
+    // Remove the now-empty entry directory (e.g. ~/passgen/<name>/).
+    if let Some(parent) = full_path.parent() {
+        let _ = fs::remove_dir(parent);
+    }
+    Ok(())
 }
