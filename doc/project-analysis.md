@@ -65,6 +65,10 @@
 - **`export` / `import`** — Placeholders only (“coming soon”).
 - **No subcommand, no `--tui`** — Prints help (same as empty invocation).
 
+## Development tasks (Just)
+
+The repo includes a **`Justfile`** at the project root ([Just](https://github.com/casey/just) command runner). Common commands: `just build`, `just release`, `just run -- --tui`, `just test`, `just fmt`, `just clippy`, `just check` (fmt check + clippy + test), `just install` (runs `./install.sh` for system install and optional Wayland deps), `just install-binary` (release build + copy to `/usr/local/bin/passgen` only). Run `just` or `just --list` to list recipes.
+
 ## Quality and maintenance observations
 
 - **Unused module:** `encrypter::hasher` is never imported outside `encrypter/mod.rs`.
