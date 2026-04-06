@@ -6,7 +6,7 @@
 
 A secure and efficient password manager and generator written in Rust. PassGen helps you generate, store, and manage your passwords securely. You can use either a traditional CLI (subcommands) or an optional full-screen terminal UI built with [Ratatui](https://github.com/ratatui/ratatui).
 
-**Version:** 1.11.0
+**Version:** 1.12.0
 
 ## Features
 
@@ -16,7 +16,7 @@ A secure and efficient password manager and generator written in Rust. PassGen h
 - Encrypted password storage (ChaCha20-Poly1305)
 - Organized password storage under your home directory
 - Configurable settings (`~/.config/passgen/passgen.toml`)
-- Import/Export functionality (coming soon)
+- **Backup:** export the whole `~/passgen` store to `.zip`, `.tar`, or `.tar.gz`; import archives and **merge** new entries without overwriting existing files
 
 ## Requirements
 
@@ -100,6 +100,8 @@ passgen insert <name>
 passgen get <name>
 passgen config
 passgen delete <name>
+passgen export [OUTPUT]   # default: passgen-export-<time>.zip in cwd
+passgen import <ARCHIVE>  # .zip, .tar, or .tar.gz — merges into ~/passgen
 ```
 
 ### Examples
@@ -128,6 +130,7 @@ passgen list
 src/
 ├── main.rs
 ├── cli.rs
+├── import_export/ # Backup / restore ~/passgen archives
 ├── tui/           # Ratatui full-screen UI (entry: tui::run)
 ├── password/      # Password management
 ├── config/        # Configuration (read / write / interactive create)
