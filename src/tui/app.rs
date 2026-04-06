@@ -14,6 +14,8 @@ use crate::password::getter::getter;
 use crate::path::config::get_path;
 use crate::utils::get_path::get_base_path;
 
+use super::filter::matches_subsequence;
+
 /// Which field is focused on the generate form.
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum GenFocus {
@@ -75,7 +77,10 @@ pub enum StatusKind {
 pub struct App {
     pub screen: Screen,
     pub config: Option<Config>,
+    /// All password entry names under `~/passgen/`.
     pub entries: Vec<String>,
+    /// Fzf-style filter on the main screen (subsequence match on names).
+    pub filter: String,
     pub list_state: ListState,
     pub status: Option<(StatusKind, String)>,
 }
@@ -90,6 +95,7 @@ impl App {
                     screen: Screen::Main,
                     config: Some(config),
                     entries: Vec::new(),
+                    filter: String::new(),
                     list_state,
                     status: None,
                 };
@@ -108,6 +114,7 @@ impl App {
                     },
                     config: None,
                     entries: Vec::new(),
+                    filter: String::new(),
                     list_state,
                     status: Some((
                         StatusKind::Err,
@@ -123,13 +130,24 @@ impl App {
         let path = get_path();
         self.entries = get_directories(&path);
         self.entries.sort();
-        if self.entries.is_empty() {
+        self.clamp_list_selection();
+    }
+
+    fn visible_entries(&self) -> Vec<&str> {
+        self.entries
+            .iter()
+            .filter(|e| matches_subsequence(&self.filter, e))
+            .map(|s| s.as_str())
+            .collect()
+    }
+
+    fn clamp_list_selection(&mut self) {
+        let n = self.visible_entries().len();
+        if n == 0 {
             self.list_state.select(None);
         } else {
-            match self.list_state.selected() {
-                Some(i) if i < self.entries.len() => {}
-                _ => self.list_state.select(Some(0)),
-            }
+            let i = self.list_state.selected().unwrap_or(0).min(n - 1);
+            self.list_state.select(Some(i));
         }
     }
 
@@ -142,9 +160,8 @@ impl App {
     }
 
     fn selected_name(&self) -> Option<&str> {
-        self.list_state
-            .selected()
-            .and_then(|i| self.entries.get(i).map(|s| s.as_str()))
+        let vis = self.visible_entries();
+        self.list_state.selected().and_then(|i| vis.get(i).copied())
     }
 
     /// Returns `true` when the app should exit.
@@ -160,81 +177,102 @@ impl App {
     }
 
     fn handle_main(&mut self, key: &KeyEvent) -> bool {
-        match key.code {
-            KeyCode::Char('q') | KeyCode::Char('Q') => return true,
-            KeyCode::Char('g') | KeyCode::Char('G') => {
-                self.screen = Screen::Generate {
-                    name: String::new(),
-                    length: String::from("16"),
-                    focus: GenFocus::Name,
-                };
-                self.status = None;
-            }
-            KeyCode::Char('i') | KeyCode::Char('I') => {
-                self.screen = Screen::Insert {
-                    name: String::new(),
-                    password: String::new(),
-                    focus: InsertFocus::Name,
-                };
-                self.status = None;
-            }
-            KeyCode::Char(c)
-                if matches!(c, 's' | 'S') && !key.modifiers.contains(KeyModifiers::CONTROL) =>
-            {
-                if let Some(ref cfg) = self.config {
-                    self.screen = Screen::Config {
-                        show_pass: cfg.options.show_pass,
-                        passgen_key: cfg.encryption.passgen_key.clone(),
-                        focus: ConfigFocus::ShowPass,
-                        is_new: false,
+        if key.modifiers.contains(KeyModifiers::CONTROL) {
+            match key.code {
+                KeyCode::Char('q') | KeyCode::Char('Q') => return true,
+                KeyCode::Char('g') | KeyCode::Char('G') => {
+                    self.screen = Screen::Generate {
+                        name: String::new(),
+                        length: String::from("16"),
+                        focus: GenFocus::Name,
                     };
-                } else {
-                    let d = default_config();
-                    self.screen = Screen::Config {
-                        show_pass: d.options.show_pass,
-                        passgen_key: d.encryption.passgen_key.clone(),
-                        focus: ConfigFocus::ShowPass,
-                        is_new: true,
-                    };
+                    self.status = None;
                 }
-                self.status = None;
+                KeyCode::Char('i') | KeyCode::Char('I') => {
+                    self.screen = Screen::Insert {
+                        name: String::new(),
+                        password: String::new(),
+                        focus: InsertFocus::Name,
+                    };
+                    self.status = None;
+                }
+                KeyCode::Char('d') | KeyCode::Char('D') => {
+                    if let Some(name) = self.selected_name() {
+                        self.screen = Screen::DeleteConfirm {
+                            name: name.to_string(),
+                        };
+                        self.status = None;
+                    } else {
+                        self.set_status_err("No entry selected.");
+                    }
+                }
+                KeyCode::Char('s') | KeyCode::Char('S') => {
+                    if let Some(ref cfg) = self.config {
+                        self.screen = Screen::Config {
+                            show_pass: cfg.options.show_pass,
+                            passgen_key: cfg.encryption.passgen_key.clone(),
+                            focus: ConfigFocus::ShowPass,
+                            is_new: false,
+                        };
+                    } else {
+                        let d = default_config();
+                        self.screen = Screen::Config {
+                            show_pass: d.options.show_pass,
+                            passgen_key: d.encryption.passgen_key.clone(),
+                            focus: ConfigFocus::ShowPass,
+                            is_new: true,
+                        };
+                    }
+                    self.status = None;
+                }
+                _ => {}
+            }
+            return false;
+        }
+
+        match key.code {
+            KeyCode::Esc => {
+                if !self.filter.is_empty() {
+                    self.filter.clear();
+                    self.clamp_list_selection();
+                }
+            }
+            KeyCode::Backspace => {
+                self.filter.pop();
+                self.clamp_list_selection();
+            }
+            KeyCode::Char(c) if !c.is_control() => {
+                self.filter.push(c);
+                self.clamp_list_selection();
             }
             KeyCode::Enter => {
                 if let Some(name) = self.selected_name() {
                     let name = name.to_string();
                     self.open_get(name);
                 } else {
-                    self.set_status_err("No entry selected.");
+                    self.set_status_err("No matching entry.");
                 }
             }
-            KeyCode::Char('d') | KeyCode::Char('D') => {
-                if let Some(name) = self.selected_name() {
-                    self.screen = Screen::DeleteConfirm {
-                        name: name.to_string(),
-                    };
-                    self.status = None;
-                } else {
-                    self.set_status_err("No entry selected.");
-                }
-            }
-            KeyCode::Down | KeyCode::Char('j') => self.select_next(),
-            KeyCode::Up | KeyCode::Char('k') => self.select_prev(),
+            KeyCode::Down => self.select_next(),
+            KeyCode::Up => self.select_prev(),
             _ => {}
         }
         false
     }
 
     fn select_next(&mut self) {
-        if self.entries.is_empty() {
+        let n = self.visible_entries().len();
+        if n == 0 {
             return;
         }
         let i = self.list_state.selected().unwrap_or(0);
-        let next = (i + 1).min(self.entries.len() - 1);
+        let next = (i + 1).min(n - 1);
         self.list_state.select(Some(next));
     }
 
     fn select_prev(&mut self) {
-        if self.entries.is_empty() {
+        let n = self.visible_entries().len();
+        if n == 0 {
             return;
         }
         let i = self.list_state.selected().unwrap_or(0);

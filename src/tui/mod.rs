@@ -3,6 +3,7 @@
 //! Entry point: [`run`], invoked when the user passes `--tui` / `-t` on the CLI.
 
 mod app;
+mod filter;
 mod ui;
 
 use std::io;

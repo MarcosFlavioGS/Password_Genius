@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use clap::{Parser, Subcommand};
 
 /// A secure password manager and generator.
@@ -41,11 +43,19 @@ pub enum Commands {
     /// Create a new configuration file
     Config,
 
-    /// Export passwords (TODO)
-    Export,
+    /// Export the entire `~/passgen` tree as a `.zip`, `.tar`, or `.tar.gz` archive
+    Export {
+        /// Output file path (extension selects format: .zip, .tar, .tar.gz / .tgz)
+        #[arg(value_name = "OUTPUT")]
+        output: Option<PathBuf>,
+    },
 
-    /// Import passwords (TODO)
-    Import,
+    /// Import an archive into `~/passgen` without overwriting existing files
+    Import {
+        /// Archive file (.zip, .tar, or .tar.gz / .tgz)
+        #[arg(value_name = "ARCHIVE")]
+        path: PathBuf,
+    },
 
     /// Removes a password
     Delete {

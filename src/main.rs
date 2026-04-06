@@ -5,11 +5,15 @@ mod deleter;
 mod directories;
 mod encrypter;
 mod generator;
+mod import_export;
 mod inserter;
 mod password;
 mod path;
 mod tui;
 mod utils;
+
+use std::path::PathBuf;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use clap::CommandFactory;
 use clap::Parser;
@@ -23,6 +27,16 @@ use inserter::insert::insert;
 use password::getter::getter;
 use path::config::get_path;
 use utils::get_path::get_base_path;
+
+fn default_export_path() -> PathBuf {
+    let ts = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs())
+        .unwrap_or(0);
+    std::env::current_dir()
+        .unwrap_or_else(|_| PathBuf::from("."))
+        .join(format!("passgen-export-{ts}.zip"))
+}
 
 fn main() {
     let cli = Cli::parse();
@@ -80,12 +94,26 @@ fn main() {
             let base_path: String = get_base_path(&name, "passgen/");
             delete(&base_path);
         }
-        Some(Commands::Export) => {
-            println!("Export functionality coming soon!");
+        Some(Commands::Export { output }) => {
+            let out = output.unwrap_or_else(default_export_path);
+            match import_export::export_passgen(&out) {
+                Ok(()) => println!("Exported password store to {}", out.display()),
+                Err(e) => {
+                    eprintln!("Export failed: {e}");
+                    std::process::exit(1);
+                }
+            }
         }
-        Some(Commands::Import) => {
-            println!("Import functionality coming soon!");
-        }
+        Some(Commands::Import { path }) => match import_export::import_passgen(&path) {
+            Ok(stats) => println!(
+                "Import finished: {} file(s) added, {} skipped (already present).",
+                stats.files_added, stats.files_skipped_existing
+            ),
+            Err(e) => {
+                eprintln!("Import failed: {e}");
+                std::process::exit(1);
+            }
+        },
         None => {
             let mut cmd = Cli::command();
             let _ = cmd.print_help();

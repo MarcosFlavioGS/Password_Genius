@@ -7,6 +7,7 @@ use ratatui::widgets::{Block, Borders, List, ListItem, Paragraph, Wrap};
 use ratatui::Frame;
 
 use super::app::{App, ConfigFocus, GenFocus, InsertFocus, Screen, StatusKind};
+use super::filter::matches_subsequence;
 
 /// Renders the current screen into `frame`.
 pub fn draw(frame: &mut Frame<'_>, app: &mut App) {
@@ -34,19 +35,40 @@ pub fn draw(frame: &mut Frame<'_>, app: &mut App) {
 fn draw_main(frame: &mut Frame<'_>, app: &mut App, area: Rect) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Length(3), Constraint::Min(5)])
+        .constraints([
+            Constraint::Length(3),
+            Constraint::Length(3),
+            Constraint::Min(4),
+        ])
         .split(area);
 
     let help = Paragraph::new(
-        "passgen TUI — g generate  i insert  Enter get  d delete  s settings  q quit  j/k move",
+        "passgen TUI — type to filter (fzf-style)  ↑↓ select  Enter open  Esc clear filter  \
+         Ctrl+G/I/D/S generate/insert/delete/settings  Ctrl+Q quit",
     )
     .style(Style::default().fg(Color::Cyan))
+    .wrap(Wrap { trim: true })
     .block(Block::default().borders(Borders::BOTTOM));
     frame.render_widget(help, chunks[0]);
+
+    let filter_line = if app.filter.is_empty() {
+        Line::from(vec![
+            Span::raw("Filter: "),
+            Span::styled("(type to filter)", Style::default().fg(Color::DarkGray)),
+        ])
+    } else {
+        Line::from(vec![
+            Span::raw("Filter: "),
+            Span::styled(app.filter.as_str(), Style::default().fg(Color::Yellow)),
+        ])
+    };
+    let filter_block = Paragraph::new(filter_line).block(Block::default().borders(Borders::BOTTOM));
+    frame.render_widget(filter_block, chunks[1]);
 
     let items: Vec<ListItem> = app
         .entries
         .iter()
+        .filter(|s| matches_subsequence(&app.filter, s))
         .map(|s| ListItem::new(Line::from(s.as_str())))
         .collect();
 
@@ -59,7 +81,7 @@ fn draw_main(frame: &mut Frame<'_>, app: &mut App, area: Rect) {
         .highlight_style(Style::default().add_modifier(Modifier::REVERSED))
         .highlight_symbol("> ");
 
-    frame.render_stateful_widget(list, chunks[1], &mut app.list_state);
+    frame.render_stateful_widget(list, chunks[2], &mut app.list_state);
 }
 
 fn draw_generate(frame: &mut Frame<'_>, app: &App, area: Rect) {

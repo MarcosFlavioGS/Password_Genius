@@ -1,6 +1,6 @@
 # Project analysis: `passgen`
 
-**Version:** 1.11.0 (from `Cargo.toml`)  
+**Version:** 1.12.0 (from `Cargo.toml`)  
 **Edition:** Rust 2021  
 **Binary name:** `passgen` (package name in manifest)
 
@@ -13,10 +13,11 @@
 | Area | Role |
 |------|------|
 | `src/main.rs` | Entry point: parses CLI with `clap`; if `--tui`, runs `tui::run`; else dispatches optional subcommand or prints help. |
-| `src/cli.rs` | `clap` definitions: global `--tui`, optional subcommands `List`, `Generate`, `Insert`, `Get`, `Config`, `Delete`, stub `Export` / `Import`. |
-| `src/tui/` | Ratatui main loop (`run`), `app` (screens, keys), `ui` (layout). Uses `read_config_result`, `generate_stored`, `insert_password`, `write_config`, etc. |
+| `src/cli.rs` | `clap` definitions: global `--tui`, optional subcommands including `Export` / `Import`. |
+| `src/import_export/` | `export_passgen` / `import_passgen`: archive `~/passgen` as `.zip` / `.tar` / `.tar.gz`; import merges without overwriting existing files. |
+| `src/tui/` | Ratatui main loop (`run`), `app` (screens, keys), `ui` (layout), `filter` (fzf-style subsequence match for the main list). Uses `read_config_result`, `generate_stored`, `insert_password`, `write_config`, etc. |
 | `src/config/` | TOML: `options.show_pass`, `encryption.passgen_key`. Read under `~/.config/passgen/passgen.toml`; `write::write_config` persists edits; `default_config` for first-run defaults; `read_config_result` for non-panicking load (TUI). |
-| `src/path/` | Resolves `~/passgen/` (list base) and config directory paths via `dirs`. |
+| `src/path/` | Resolves `~/passgen/` (list base) and config directory paths via `dirs` (`config`, `passgen` helpers). |
 | `src/utils/` | Builds storage path segments, e.g. `passgen/<name>/pass`. |
 | `src/generator/` | CLI: interactive length via `new_password`; shared generation via `generate_password_at_length`; `generate_stored` for TUI (store + clipboard, returns plaintext for status). |
 | `src/password/` | `insert_pass` (encrypt + write file), `getter` (read + decrypt), `new_pass` (generator). |
@@ -46,6 +47,8 @@
 | `chacha20poly1305` | AEAD for stored secrets. |
 | `argon2` | Key derivation (`derive`) and unused `hasher` helper. |
 | `clipboard` | X11 clipboard. |
+| `zip` / `tar` / `flate2` | Export/import archives (ZIP deflate; tar; gzip tarballs). |
+| `thiserror` | Import/export error type. |
 
 ## Security-relevant notes (for maintainers)
 
@@ -55,14 +58,15 @@
 
 ## User-facing commands (behavioral summary)
 
-- **`--tui` / `-t`** — Full-screen UI: list entries, generate (name + length), insert (masked password field), get (copy with `c`), delete (confirm), settings (write TOML with Ctrl+S). If config is missing, opens first-run settings; Esc with no saved config quits.
+- **`--tui` / `-t`** — Full-screen UI: main screen lists entries with a **filter line** — typing filters names with **fzf-style subsequence** matching (case-insensitive); **↑/↓** move selection, **Enter** opens get, **Esc** clears the filter. Actions on the main screen use **Ctrl+G** (generate), **Ctrl+I** (insert), **Ctrl+D** (delete), **Ctrl+S** (settings), **Ctrl+Q** (quit). Other screens: insert (masked password field), get (copy with `c`), delete (confirm), settings (write TOML with Ctrl+S). If config is missing, opens first-run settings; Esc with no saved config quits.
 - **`list`** — Prints directory names under `~/passgen/` (recursive).
 - **`generate <name>`** — Prompts for length, generates password, writes encrypted file, copies to clipboard.
 - **`insert <name>`** — Reads password from stdin, encrypts, writes file.
 - **`get <name>`** — Decrypts and optionally prints; always attempts clipboard copy.
 - **`config`** — Interactive creation of default TOML.
 - **`delete <name>`** — Removes the file at `~/passgen/<name>/pass`.
-- **`export` / `import`** — Placeholders only (“coming soon”).
+- **`export [OUTPUT]`** — Writes a compressed archive of the entire `~/passgen` tree. Extension selects format: `.zip` (default deflate), `.tar`, or `.tar.gz` / `.tgz`. If `OUTPUT` is omitted, writes `passgen-export-<unix_time>.zip` in the current directory.
+- **`import <ARCHIVE>`** — Extracts a `.zip`, `.tar`, or `.tar.gz` archive into `~/passgen` (creating the directory if needed). **Does not overwrite** existing files; only adds paths that are missing. ZIP entries use `enclosed_name()` to avoid path traversal; tar entries are restricted to relative paths without `..`.
 - **No subcommand, no `--tui`** — Prints help (same as empty invocation).
 
 ## Development tasks (Just)
@@ -78,7 +82,7 @@ The repo includes a **`Justfile`** at the project root ([Just](https://github.co
 
 ## Suggested directions (non-blocking)
 
-- Implement or remove `Export` / `Import` and the unused `hasher` path.
+- Remove or wire up the unused `hasher` path.
 - Return `Result` from `read_config` or validate before use in CLI paths.
 - Add integration tests with a temporary `HOME` and fixed config for deterministic runs.
 
