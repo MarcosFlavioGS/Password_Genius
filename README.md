@@ -85,7 +85,7 @@ passgen -t
 
 | Screen | Keys (summary) |
 |--------|----------------|
-| Main list | `j` / `k` or arrows — move; `Enter` — open entry; `g` — generate; `i` — insert; `d` — delete; `s` — settings; `q` — quit |
+| Main list | Type to filter entries (fzf-style subsequence match); `↑` / `↓` — move; `Enter` — open; `Esc` — clear filter; `Ctrl+G` / `Ctrl+I` / `Ctrl+D` / `Ctrl+S` / `Ctrl+Q` — generate / insert / delete / settings / quit |
 | Generate / Insert | `Tab` — switch fields; `Enter` — submit; `Esc` — back |
 | Retrieve | `c` — copy to clipboard; `Esc` — back |
 | Delete confirm | `y` / `n` or `Esc` |

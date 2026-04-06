@@ -14,7 +14,7 @@
 |------|------|
 | `src/main.rs` | Entry point: parses CLI with `clap`; if `--tui`, runs `tui::run`; else dispatches optional subcommand or prints help. |
 | `src/cli.rs` | `clap` definitions: global `--tui`, optional subcommands `List`, `Generate`, `Insert`, `Get`, `Config`, `Delete`, stub `Export` / `Import`. |
-| `src/tui/` | Ratatui main loop (`run`), `app` (screens, keys), `ui` (layout). Uses `read_config_result`, `generate_stored`, `insert_password`, `write_config`, etc. |
+| `src/tui/` | Ratatui main loop (`run`), `app` (screens, keys), `ui` (layout), `filter` (fzf-style subsequence match for the main list). Uses `read_config_result`, `generate_stored`, `insert_password`, `write_config`, etc. |
 | `src/config/` | TOML: `options.show_pass`, `encryption.passgen_key`. Read under `~/.config/passgen/passgen.toml`; `write::write_config` persists edits; `default_config` for first-run defaults; `read_config_result` for non-panicking load (TUI). |
 | `src/path/` | Resolves `~/passgen/` (list base) and config directory paths via `dirs`. |
 | `src/utils/` | Builds storage path segments, e.g. `passgen/<name>/pass`. |
@@ -55,7 +55,7 @@
 
 ## User-facing commands (behavioral summary)
 
-- **`--tui` / `-t`** — Full-screen UI: list entries, generate (name + length), insert (masked password field), get (copy with `c`), delete (confirm), settings (write TOML with Ctrl+S). If config is missing, opens first-run settings; Esc with no saved config quits.
+- **`--tui` / `-t`** — Full-screen UI: main screen lists entries with a **filter line** — typing filters names with **fzf-style subsequence** matching (case-insensitive); **↑/↓** move selection, **Enter** opens get, **Esc** clears the filter. Actions on the main screen use **Ctrl+G** (generate), **Ctrl+I** (insert), **Ctrl+D** (delete), **Ctrl+S** (settings), **Ctrl+Q** (quit). Other screens: insert (masked password field), get (copy with `c`), delete (confirm), settings (write TOML with Ctrl+S). If config is missing, opens first-run settings; Esc with no saved config quits.
 - **`list`** — Prints directory names under `~/passgen/` (recursive).
 - **`generate <name>`** — Prompts for length, generates password, writes encrypted file, copies to clipboard.
 - **`insert <name>`** — Reads password from stdin, encrypts, writes file.
