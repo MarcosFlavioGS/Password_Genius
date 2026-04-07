@@ -41,10 +41,9 @@ fn draw_main(frame: &mut Frame<'_>, app: &mut App, area: Rect) {
             Constraint::Min(4),
         ])
         .split(area);
-
     let help = Paragraph::new(
-        "passgen TUI — type to filter (fzf-style)  ↑↓ select  Enter open  Esc clear filter  \
-         Ctrl+G/I/D/S generate/insert/delete/settings  Ctrl+Q quit",
+        "passgen TUI — type to filter (fzf-style)  ↑↓ -> select  Enter -> open  Esc -> clear filter  \
+         Ctrl+G/I/D/S -> generate/insert/delete/settings  Ctrl+Q -> quit",
     )
     .style(Style::default().fg(Color::Cyan))
     .wrap(Wrap { trim: true })
